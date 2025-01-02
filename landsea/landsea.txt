@@ -1,0 +1,12 @@
+
+ogrmerge.py -o tmp.shp -single -a_srs EPSG:4326 hydro_p_LakeErie.shp hydro_p_LakeHuron.shp hydro_p_LakeMichigan.shp hydro_p_LakeOntario.shp hydro_p_LakeStClair.shp hydro_p_LakeSuperior.shp
+gdal_rasterize -a_nodata -1 -burn 1 -tr 0.005 0.005 -te -94 39 -72 51 -of netCDF -co "FORMAT=NC4" tmp.shp tmp.nc
+cdo -f nc4 remapnn,grid -chname,Band1,landsea -setmisstoc,0 tmp.nc landsea.nc
+
+go to the parent directory
+
+cdo -f nc4 remapnn,./grids/superior ./landsea/landsea.nc ./landsea/landsea_s.nc
+cdo -f nc4 remapnn,./grids/michigan ./landsea/landsea.nc ./landsea/landsea_m.nc
+cdo -f nc4 remapnn,./grids/erie ./landsea/landsea.nc ./landsea/landsea_e.nc
+cdo -f nc4 remapnn,./grids/ontario ./landsea/landsea.nc ./landsea/landsea_o.nc
+
